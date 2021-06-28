@@ -3,6 +3,21 @@ const app = express();
 const server = require("http").createServer(app);
 const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+require("dotenv").config();
+
+//DATABASE
+mongoose
+    .connect(process.env.DATABASE, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => console.log("DB Connected"));
+
+const authRoutes = require("./routes/auth");
+const { db } = require("./models/User");
 
 const io = require("socket.io")(server, {
     cors: {
@@ -11,7 +26,12 @@ const io = require("socket.io")(server, {
     },
 });
 
+//middleware
+app.use(bodyParser.json());
 app.use(cors());
+
+//routes middleware
+app.use("/api", authRoutes);
 
 const PORT = process.env.PORT || 5000;
 
@@ -25,6 +45,9 @@ app.get("/", (req, res) => {
 
 const users = {};
 const socketToRoom = {};
+
+const messages = {};
+
 //Socket.io:
 io.on("connection", (socket) => {
     socket.on("join-room", (room) => {
@@ -53,6 +76,17 @@ io.on("connection", (socket) => {
 
         socket.on("answercall", (data) => {
             io.to(data.to).emit("callaccepted", data.signal);
+        });
+
+        socket.on("messageSent", ({ text, name }) => {
+            if (!messages[room]) {
+                messages[room] = [{ name: name, message: text }];
+            } else {
+                messages[room].push({ name: name, message: text });
+            }
+            //console.log("Messages Server", messages);
+
+            io.sockets.emit("messageReceived", messages);
         });
     });
 });
