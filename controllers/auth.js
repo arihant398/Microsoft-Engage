@@ -142,17 +142,17 @@ function searchArray(myArray, idToFind) {
 }
 
 exports.addRoom = (req, res) => {
-    let { email, id } = req.body;
+    let { email, id, isWaitingRoom, roomName } = req.body;
 
     User.findOne({ email: email }).then((user) => {
         if (!user) {
-            return res.status(500).json({
+            return res.status(503).json({
                 errors: [{ user: "not found" }],
             });
         } else {
             let isPresent = searchArray(user.rooms, id);
             if (!isPresent) {
-                user.rooms.push({ id });
+                user.rooms.push({ id, isWaitingRoom, roomName });
                 user.save()
                     .then((response) => {
                         res.status(200).json({
@@ -161,12 +161,12 @@ exports.addRoom = (req, res) => {
                         });
                     })
                     .catch((err) => {
-                        res.status(500).json({
+                        res.status(501).json({
                             errors: [{ error: err }],
                         });
                     });
             } else {
-                return res.status(500).json({
+                return res.status(502).json({
                     errors: [{ Id: "Already Exists" }],
                 });
             }

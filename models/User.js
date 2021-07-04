@@ -14,7 +14,7 @@ let userSchema = new Schema(
             type: String,
             required: true,
         },
-        rooms: [{ id: String }],
+        rooms: [{ id: String, isWaitingRoom: Boolean, roomName: String }],
     },
     {
         timestamps: true,

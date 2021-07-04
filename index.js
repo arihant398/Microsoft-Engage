@@ -45,6 +45,7 @@ app.get("/", (req, res) => {
 
 const users = {};
 const socketToRoom = {};
+const usersInMeeting = {};
 
 const messages = {};
 
@@ -62,7 +63,7 @@ io.on("connection", (socket) => {
         socket.emit("me", socket.id);
 
         socket.on("disconnect", () => {
-            delete users[room][socket.id];
+            deleteID(users, socket.id, room);
             socket.broadcast.emit("callended");
         });
 
@@ -75,7 +76,17 @@ io.on("connection", (socket) => {
         });
 
         socket.on("answercall", (data) => {
-            io.to(data.to).emit("callaccepted", data.signal);
+            if (!usersInMeeting[room]) {
+                usersInMeeting[room] = [socket.id];
+            } else {
+                usersInMeeting[room].push(socket.id);
+            }
+            io.to(data.to).emit("callaccepted", {
+                signal: data.signal,
+                name: data.name,
+                sockID: socket.id,
+                usersInMeeting,
+            });
         });
 
         socket.on("messageSent", ({ text, name }) => {
@@ -90,6 +101,16 @@ io.on("connection", (socket) => {
         });
     });
 });
+
+function deleteID(array, idToDelete, roomID) {
+    for (var i = 0; i < array[roomID].length; i++) {
+        if (array[roomID][i] === idToDelete) {
+            array[roomID].splice(i, 1);
+            return array;
+        }
+    }
+    return array;
+}
 
 server.listen(PORT, () => {
     console.log(`Server is running at port: ${PORT}`);
