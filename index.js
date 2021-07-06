@@ -54,16 +54,21 @@ io.on("connection", (socket) => {
     socket.on("join-room", (room) => {
         if (!users[room]) {
             users[room] = [socket.id];
+            usersInMeeting[room] = [socket.id];
         } else {
             users[room].push(socket.id);
         }
         socketToRoom[socket.id] = room;
         //const usersInThisRoom = users[room].filter((id) => id !== socket.id);
-        io.sockets.emit("allUsers", users);
+        io.sockets.emit("allUsers", {
+            users,
+            usersInMeetingRoom: usersInMeeting,
+        });
         socket.emit("me", socket.id);
 
         socket.on("disconnect", () => {
             deleteID(users, socket.id, room);
+            deleteID(usersInMeeting, socket.id, room);
             socket.broadcast.emit("callended");
         });
 
@@ -78,14 +83,18 @@ io.on("connection", (socket) => {
         socket.on("answercall", (data) => {
             if (!usersInMeeting[room]) {
                 usersInMeeting[room] = [socket.id];
-            } else {
-                usersInMeeting[room].push(socket.id);
+            } else if (!searchID(usersInMeeting, data.to, room)) {
+                usersInMeeting[room].push(data.to);
             }
             io.to(data.to).emit("callaccepted", {
                 signal: data.signal,
                 name: data.name,
                 sockID: socket.id,
-                usersInMeeting,
+                usersInMeetingRoom: usersInMeeting,
+            });
+            io.sockets.emit("allUsers", {
+                users,
+                usersInMeetingRoom: usersInMeeting,
             });
         });
 
@@ -99,6 +108,13 @@ io.on("connection", (socket) => {
 
             io.sockets.emit("messageReceived", messages);
         });
+
+        socket.on("hand-raised", (socketID) => {
+            io.sockets.emit("handRaised", socketID);
+        });
+        socket.on("hand-down", (socketID) => {
+            io.sockets.emit("handDown", socketID);
+        });
     });
 });
 
@@ -110,6 +126,15 @@ function deleteID(array, idToDelete, roomID) {
         }
     }
     return array;
+}
+
+function searchID(array, idToSearch, roomID) {
+    for (var i = 0; i < array[roomID].length; i++) {
+        if (array[roomID][i] === idToSearch) {
+            return true;
+        }
+    }
+    return false;
 }
 
 server.listen(PORT, () => {
