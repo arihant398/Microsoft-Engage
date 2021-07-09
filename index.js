@@ -18,6 +18,9 @@ mongoose
 
 const authRoutes = require("./routes/auth");
 const { db } = require("./models/User");
+const { messageDB } = require("./models/RoomMessage");
+
+const RoomMessage = require("./models/RoomMessage");
 
 const io = require("socket.io")(server, {
     cors: {
@@ -46,6 +49,7 @@ app.get("/", (req, res) => {
 const users = {};
 const socketToRoom = {};
 const usersInMeeting = {};
+const chatUsers = {};
 
 const messages = {};
 
@@ -66,10 +70,16 @@ io.on("connection", (socket) => {
         });
         socket.emit("me", socket.id);
 
+        socket.emit("updateMessage", messages);
+
         socket.on("disconnect", () => {
             deleteID(users, socket.id, room);
             deleteID(usersInMeeting, socket.id, room);
-            socket.broadcast.emit("callended");
+            io.sockets.emit("callended", {
+                socketID: socket.id,
+                users,
+                usersInMeeting,
+            });
         });
 
         socket.on("calluser", ({ userToCall, signalData, from, name }) => {
@@ -105,6 +115,7 @@ io.on("connection", (socket) => {
                 messages[room].push({ name: name, message: text });
             }
             //console.log("Messages Server", messages);
+            addToMessageDB(room, { name: name, message: text });
 
             io.sockets.emit("messageReceived", messages);
         });
@@ -114,6 +125,35 @@ io.on("connection", (socket) => {
         });
         socket.on("hand-down", (socketID) => {
             io.sockets.emit("handDown", socketID);
+        });
+    });
+
+    socket.on("join-chat-room", (room) => {
+        if (!chatUsers[room]) {
+            chatUsers[room] = [socket.id];
+        } else {
+            chatUsers[room].push(socket.id);
+        }
+        socketToRoom[socket.id] = room;
+        io.sockets.emit("allChatUsers", chatUsers);
+        socket.emit("chatMe", socket.id);
+
+        socket.on("chatDisconnect", () => {
+            deleteID(chatUsers, socket.id, room);
+        });
+
+        socket.emit("updateChatMessage", messages);
+
+        socket.on("chatMessageSent", ({ text, name, rID }) => {
+            if (!messages[rID]) {
+                messages[rID] = [{ name: name, message: text }];
+            } else {
+                messages[rID].push({ name: name, message: text });
+            }
+            //console.log("Messages Server", messages);
+            addToMessageDB(rID, { name: name, message: text });
+
+            io.sockets.emit("chatMessageReceived", messages);
         });
     });
 });
@@ -135,6 +175,24 @@ function searchID(array, idToSearch, roomID) {
         }
     }
     return false;
+}
+
+function addToMessageDB(roomID, message) {
+    if (roomID.slice(0, 4) === "chat") {
+        roomID = roomID.slice(5);
+    }
+    RoomMessage.findOne({ roomID: roomID }).then((room) => {
+        if (room) {
+            room.message.push(message);
+            room.save();
+        } else {
+            const room = new RoomMessage({
+                roomID: roomID,
+                message: message,
+            });
+            room.save();
+        }
+    });
 }
 
 server.listen(PORT, () => {

@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const RoomMessage = require("../models/RoomMessage");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { createJWT } = require("../utils/auth");
@@ -187,5 +188,18 @@ exports.viewRoom = (req, res) => {
             success: true,
             result: user.rooms,
         });
+    });
+};
+
+exports.viewMessages = (req, res) => {
+    let { roomID } = req.body;
+    console.log(roomID);
+    RoomMessage.findOne({ roomID: roomID }).then((room) => {
+        if (!room) {
+            return res.status(404).json({
+                errors: [{ roomID: "No messages in this room" }],
+            });
+        }
+        res.status(200).json({ success: true, result: room.message });
     });
 };
