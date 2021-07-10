@@ -108,14 +108,14 @@ io.on("connection", (socket) => {
             });
         });
 
-        socket.on("messageSent", ({ text, name }) => {
+        socket.on("messageSent", ({ text, name, id }) => {
             if (!messages[room]) {
-                messages[room] = [{ name: name, message: text }];
+                messages[room] = [{ name: name, message: text, userID: id }];
             } else {
-                messages[room].push({ name: name, message: text });
+                messages[room].push({ name: name, message: text, userID: id });
             }
             //console.log("Messages Server", messages);
-            addToMessageDB(room, { name: name, message: text });
+            addToMessageDB(room, { name: name, message: text, userID: id });
 
             io.sockets.emit("messageReceived", messages);
         });
@@ -144,11 +144,11 @@ io.on("connection", (socket) => {
 
         socket.emit("updateChatMessage", messages);
 
-        socket.on("chatMessageSent", ({ text, name, rID }) => {
+        socket.on("chatMessageSent", ({ text, name, rID, id }) => {
             if (!messages[rID]) {
-                messages[rID] = [{ name: name, message: text }];
+                messages[rID] = [{ name: name, message: text, userID: id }];
             } else {
-                messages[rID].push({ name: name, message: text });
+                messages[rID].push({ name: name, message: text, userID: id });
             }
             //console.log("Messages Server", messages);
             addToMessageDB(rID, { name: name, message: text });
