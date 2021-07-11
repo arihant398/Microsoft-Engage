@@ -51,7 +51,7 @@ const ContextProvider = ({ children }) => {
     const [handRaisedList, setHandRaisedList] = useState([]);
 
     useEffect(() => {
-        socket.current = io("http://localhost:5000/", {
+        socket.current = io("https://union-server-final.herokuapp.com/", {
             "sync disconnect on unload": true,
         });
         navigator.mediaDevices
@@ -134,8 +134,14 @@ const ContextProvider = ({ children }) => {
     }, [handRaisedList]);
 
     function sendMessage(text) {
-        socket.current.emit("messageSent", { text, name, id: me });
+        socket.current.emit("messageSent", {
+            text,
+            name,
+            id: me,
+            senderMail: user_mail,
+        });
     }
+    const user_mail = localStorage.getItem("user-email");
 
     function updateMessages() {}
 

@@ -6,7 +6,9 @@ let messageSchema = new Schema(
             type: String,
             required: true,
         },
-        message: [{ name: String, message: String }],
+        message: [
+            { name: String, message: String, id: String, senderMail: String },
+        ],
     },
     {
         timestamps: true,

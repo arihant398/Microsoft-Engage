@@ -12,8 +12,10 @@ const ChatRoomContextProvider = ({ children }) => {
     const [me, setMe] = useState();
     const [roomID, setRoomID] = useState(window.location.pathname.slice(6));
 
+    const user_mail = localStorage.getItem("user-email");
+
     useEffect(() => {
-        socket.current = io("http://localhost:5000/", {
+        socket.current = io("https://union-server-final.herokuapp.com/", {
             "sync disconnect on unload": true,
         });
         socket.current.emit("join-chat-room", roomID);
@@ -42,6 +44,7 @@ const ChatRoomContextProvider = ({ children }) => {
             name,
             rID: room,
             id: me,
+            senderMail: user_mail,
         });
     }
 

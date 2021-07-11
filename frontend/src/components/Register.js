@@ -26,7 +26,7 @@ const Register = () => {
         try {
             const signup = { name, email, password, password_confirmation };
             const signupResponse = await axios.post(
-                "http://localhost:5000/api/signup",
+                "https://union-server-final.herokuapp.com/api/signup",
                 signup
             );
             history.push("/");

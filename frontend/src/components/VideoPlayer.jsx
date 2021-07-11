@@ -148,7 +148,7 @@ const VideoPlayer = ({ isOnlyChat }) => {
                 roomName: "New Room",
             };
             const roomResponse = await axios.post(
-                "http://localhost:5000/api/addRoom",
+                "https://union-server-final.herokuapp.com/api/addRoom",
                 roomData
             );
             setIsRoomAdded(true);

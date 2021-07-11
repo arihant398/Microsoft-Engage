@@ -39,6 +39,7 @@ const Chat = ({
             roomName = userRoomListData[obj].roomName;
         }
     });
+    const user_mail = localStorage.getItem("user-email");
 
     return (
         <div className={mainChatClass}>
@@ -69,7 +70,9 @@ const Chat = ({
                                         <div
                                             className={
                                                 messages[rID][obj].userID ===
-                                                userid
+                                                    userid ||
+                                                messages[rID][obj]
+                                                    .senderMail === user_mail
                                                     ? "userInnerChat"
                                                     : "innerChat"
                                             }
@@ -96,6 +99,7 @@ const Chat = ({
                                                     style={{
                                                         fontWeight: "900",
                                                         marginRight: "5px",
+                                                        color: "black",
                                                     }}
                                                 >
                                                     Guest:

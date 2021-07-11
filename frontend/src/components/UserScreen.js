@@ -104,7 +104,7 @@ const UserScreen = (props) => {
                 roomName: roomName,
             };
             const roomResponse = await axios.post(
-                "http://localhost:5000/api/addRoom",
+                "https://union-server-final.herokuapp.com/api/addRoom",
                 roomData
             );
             setAlertStatus(1);
@@ -117,10 +117,11 @@ const UserScreen = (props) => {
     // Sends a post request to the server with the required data
     const viewRooms = async (e) => {
         e.preventDefault();
+        setAlertStatus(2);
         try {
             const roomData = { email: userEmail };
             const roomResponse = await axios.post(
-                "http://localhost:5000/api/viewRoom",
+                "https://union-server-final.herokuapp.com/api/viewRoom",
                 roomData
             );
             setRoomListData(roomResponse.data.result);

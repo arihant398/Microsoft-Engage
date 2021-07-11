@@ -107,13 +107,30 @@ io.on("connection", (socket) => {
             });
         });
 
-        socket.on("messageSent", ({ text, name, id }) => {
+        socket.on("messageSent", ({ text, name, id, senderMail }) => {
             if (!messages[room]) {
-                messages[room] = [{ name: name, message: text, userID: id }];
+                messages[room] = [
+                    {
+                        name: name,
+                        message: text,
+                        userID: id,
+                        senderMail: senderMail,
+                    },
+                ];
             } else {
-                messages[room].push({ name: name, message: text, userID: id });
+                messages[room].push({
+                    name: name,
+                    message: text,
+                    userID: id,
+                    senderMail: senderMail,
+                });
             }
-            addToMessageDB(room, { name: name, message: text, userID: id });
+            addToMessageDB(room, {
+                name: name,
+                message: text,
+                userID: id,
+                senderMail: senderMail,
+            });
 
             io.sockets.emit("messageReceived", messages);
         });
@@ -142,13 +159,30 @@ io.on("connection", (socket) => {
 
         socket.emit("updateChatMessage", messages);
 
-        socket.on("chatMessageSent", ({ text, name, rID, id }) => {
+        socket.on("chatMessageSent", ({ text, name, rID, id, senderMail }) => {
             if (!messages[rID]) {
-                messages[rID] = [{ name: name, message: text, userID: id }];
+                messages[rID] = [
+                    {
+                        name: name,
+                        message: text,
+                        userID: id,
+                        senderMail: senderMail,
+                    },
+                ];
             } else {
-                messages[rID].push({ name: name, message: text, userID: id });
+                messages[rID].push({
+                    name: name,
+                    message: text,
+                    userID: id,
+                    senderMail: senderMail,
+                });
             }
-            addToMessageDB(rID, { name: name, message: text });
+            addToMessageDB(rID, {
+                name: name,
+                message: text,
+                userID: id,
+                senderMail: senderMail,
+            });
 
             io.sockets.emit("chatMessageReceived", messages);
         });

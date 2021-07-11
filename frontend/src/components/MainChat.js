@@ -7,6 +7,7 @@ import Chat from "./Chat";
 import { UserContext } from "../UserContext";
 import { Row, Col } from "react-bootstrap";
 import RoomList from "./RoomList";
+import { useHistory } from "react-router-dom";
 
 // Component which acts as the main chat screen
 const MainChat = () => {
@@ -23,17 +24,31 @@ const MainChat = () => {
         window.location.pathname.slice(6)
     );
 
+    const history = useHistory();
+    const [isRoomAdded, setIsRoomAdded] = useState(false);
     // Setting client side user data
     useEffect(() => {
-        setUserName(() => localStorage.getItem("user-name"));
-        setName(() => localStorage.getItem("user-name"));
         setNewRoomID(window.location.pathname.slice(6));
-        setUserRoomListData(() =>
-            JSON.parse(localStorage.getItem("user-room-data"))
-        );
-        setRoomListData(() =>
-            JSON.parse(localStorage.getItem("user-room-data"))
-        );
+
+        if (localStorage.getItem("user-name")) {
+            setUserName(() => localStorage.getItem("user-name"));
+            setName(() => localStorage.getItem("user-name"));
+
+            setUserRoomListData(() =>
+                JSON.parse(localStorage.getItem("user-room-data"))
+            );
+            setRoomListData(() =>
+                JSON.parse(localStorage.getItem("user-room-data"))
+            );
+            Object.keys(userRoomListData).map((obj, i) => {
+                if (userRoomListData[obj].id === newRoomID) {
+                    setIsRoomAdded(true);
+                    return;
+                }
+            });
+        } else {
+            window.location.replace("/");
+        }
     }, []);
 
     // Updating the messages
