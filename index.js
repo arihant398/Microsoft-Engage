@@ -63,7 +63,6 @@ io.on("connection", (socket) => {
             users[room].push(socket.id);
         }
         socketToRoom[socket.id] = room;
-        //const usersInThisRoom = users[room].filter((id) => id !== socket.id);
         io.sockets.emit("allUsers", {
             users,
             usersInMeetingRoom: usersInMeeting,
@@ -114,7 +113,6 @@ io.on("connection", (socket) => {
             } else {
                 messages[room].push({ name: name, message: text, userID: id });
             }
-            //console.log("Messages Server", messages);
             addToMessageDB(room, { name: name, message: text, userID: id });
 
             io.sockets.emit("messageReceived", messages);
@@ -150,7 +148,6 @@ io.on("connection", (socket) => {
             } else {
                 messages[rID].push({ name: name, message: text, userID: id });
             }
-            //console.log("Messages Server", messages);
             addToMessageDB(rID, { name: name, message: text });
 
             io.sockets.emit("chatMessageReceived", messages);
