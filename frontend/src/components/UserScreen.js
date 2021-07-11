@@ -10,13 +10,14 @@ import {
     Tooltip,
 } from "@material-ui/core";
 import { ExitToApp, AddCircle, Chat, VideoCall } from "@material-ui/icons";
-
+import { Row, Col } from "react-bootstrap";
 import { v1 as uuid } from "uuid";
 import Alert from "@material-ui/lab/Alert";
 import axios from "axios";
 import AddRoom from "./AddRoom";
 import RoomList from "./RoomList";
 import Buttons from "./Buttons";
+import logo from "../images/final-logo-nav.png";
 
 const UserScreen = (props) => {
     const [name, setName] = useState();
@@ -120,7 +121,10 @@ const UserScreen = (props) => {
             setRoomListData(roomResponse.data.result);
             setIsViewRoom(!isViewRoom);
             setUserRoomListData(roomResponse.data.result);
-            console.log(userRoomListData);
+            localStorage.setItem(
+                "user-room-data",
+                JSON.stringify(roomResponse.data.result)
+            );
             setIsAddRoom(false);
         } catch (err) {
             console.log("Error while Viewing  Room");
@@ -138,59 +142,76 @@ const UserScreen = (props) => {
                 }}
             >
                 <Toolbar
-                    style={{ minHeight: "55px", justifyContent: "center" }}
+                    style={{
+                        minHeight: "55px",
+                    }}
                 >
-                    <div className="userScreen-Buttons">
-                        <Tooltip title="Create New Room">
-                            <Button
-                                color="primary"
-                                startIcon={
-                                    <VideoCall
-                                        fontSize="42px"
-                                        style={{ color: iconColor }}
-                                    />
-                                }
-                                onClick={create}
-                                className="videoCallButton"
-                            ></Button>
-                        </Tooltip>
-                        <Tooltip title="Add New Room">
-                            <Button
-                                color="primary"
-                                startIcon={
-                                    <AddCircle
-                                        fontSize="50px"
-                                        style={{ color: iconColor }}
-                                    />
-                                }
-                                onClick={updateIsAddRoom}
-                            ></Button>
-                        </Tooltip>
-                        <Tooltip title="Chat">
-                            <Button
-                                color="primary"
-                                startIcon={
-                                    <Chat
-                                        fontSize="50px"
-                                        style={{ color: iconColor }}
-                                    />
-                                }
-                                onClick={viewRooms}
-                            ></Button>
-                        </Tooltip>
-                        <Tooltip title="LOGOUT">
-                            <Button
-                                color="secondary"
-                                startIcon={
-                                    <ExitToApp
-                                        fontSize="50px"
-                                        style={{ color: iconColor }}
-                                    />
-                                }
-                                onClick={handleLogout}
-                            ></Button>
-                        </Tooltip>
-                    </div>
+                    <Grid justify={"space-between"} container>
+                        <Grid
+                            xs={1}
+                            item
+                            className="logo"
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                textAlign: "center",
+                            }}
+                        >
+                            <img src={logo} alt="UnIon" width="110px" />
+                        </Grid>
+                        <Grid xs={4} item className="userScreen-Buttons">
+                            <Tooltip title="Create New Room">
+                                <Button
+                                    color="primary"
+                                    startIcon={
+                                        <VideoCall
+                                            fontSize="42px"
+                                            style={{ color: iconColor }}
+                                        />
+                                    }
+                                    onClick={create}
+                                    className="videoCallButton"
+                                ></Button>
+                            </Tooltip>
+                            <Tooltip title="Add New Room">
+                                <Button
+                                    color="primary"
+                                    startIcon={
+                                        <AddCircle
+                                            fontSize="50px"
+                                            style={{ color: iconColor }}
+                                        />
+                                    }
+                                    onClick={updateIsAddRoom}
+                                ></Button>
+                            </Tooltip>
+                            <Tooltip title="Chat">
+                                <Button
+                                    color="primary"
+                                    startIcon={
+                                        <Chat
+                                            fontSize="50px"
+                                            style={{ color: iconColor }}
+                                        />
+                                    }
+                                    onClick={viewRooms}
+                                ></Button>
+                            </Tooltip>
+                            <Tooltip title="LOGOUT">
+                                <Button
+                                    color="secondary"
+                                    startIcon={
+                                        <ExitToApp
+                                            fontSize="50px"
+                                            style={{ color: iconColor }}
+                                        />
+                                    }
+                                    onClick={handleLogout}
+                                ></Button>
+                            </Tooltip>
+                        </Grid>
+                        <Grid item xs={1} />
+                    </Grid>
                 </Toolbar>
             </AppBar>
             <div className="userScreen-Name">

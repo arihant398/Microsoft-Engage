@@ -9,24 +9,24 @@ exports.signup = (req, res, next) => {
     let { name, email, password, password_confirmation } = req.body;
     let errors = [];
     if (!name) {
-        errors.push({ name: "required" });
+        errors.push({ name: "Name Is Required" });
     }
     if (!email) {
-        errors.push({ email: "required" });
+        errors.push({ email: "Email Is Required" });
     }
     if (!emailRegexp.test(email)) {
-        errors.push({ email: "invalid" });
+        errors.push({ email: "Email Is Invalid" });
     }
     if (!password) {
-        errors.push({ password: "required" });
+        errors.push({ password: "Password Is Required" });
     }
     if (!password_confirmation) {
         errors.push({
-            password_confirmation: "required",
+            password_confirmation: "Confirm Password Is Required",
         });
     }
     if (password != password_confirmation) {
-        errors.push({ password: "mismatch" });
+        errors.push({ password: "Password, Confirm Password Mismatch" });
     }
     if (errors.length > 0) {
         return res.status(422).json({ errors: errors });
@@ -36,7 +36,7 @@ exports.signup = (req, res, next) => {
             if (user) {
                 return res
                     .status(422)
-                    .json({ errors: [{ user: "email already exists" }] });
+                    .json({ errors: [{ user: "Email Already Exists" }] });
             } else {
                 const user = new User({
                     name: name,
@@ -95,9 +95,9 @@ exports.signin = (req, res) => {
                     .compare(password, user.password)
                     .then((isMatch) => {
                         if (!isMatch) {
-                            return res
-                                .status(400)
-                                .json({ errors: [{ password: "incorrect" }] });
+                            return res.status(400).json({
+                                errors: [{ password: "password incorrect" }],
+                            });
                         }
 
                         let access_token = createJWT(

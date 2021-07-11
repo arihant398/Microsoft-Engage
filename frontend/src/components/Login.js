@@ -11,11 +11,14 @@ import {
     CardMedia,
     Typography,
 } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import logo from "../images/final-logo.png";
 
 const Login = (props) => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [error, setError] = useState();
+    const [isError, setIsError] = useState(false);
 
     const { setUserName, setUserEmail, setUserPassword, setToken } =
         useContext(UserContext);
@@ -49,6 +52,9 @@ const Login = (props) => {
         } catch (err) {
             //err.response.data.msg && setError(err.response.data.msg);
             console.log("Error while logging in");
+            console.log(err.response.data.errors[0]);
+            setError(err.response.data.errors[0]);
+            setIsError(true);
         }
     };
 
@@ -58,6 +64,14 @@ const Login = (props) => {
     }
     return (
         <div className="login">
+            <div className="homeScreenLogo">
+                <img
+                    src={logo}
+                    alt="UnIon"
+                    width="200px"
+                    style={{ margin: "20px" }}
+                />
+            </div>
             <Card>
                 <div className="login-form">
                     <form onSubmit={submit}>
@@ -105,6 +119,11 @@ const Login = (props) => {
                     </form>
                 </div>
             </Card>
+            <div className="errorAlert" style={{ margin: "10px" }}>
+                {isError ? (
+                    <Alert severity="error">Invalid Login Details</Alert>
+                ) : null}
+            </div>
         </div>
     );
 };

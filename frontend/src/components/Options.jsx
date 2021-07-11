@@ -5,6 +5,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Assignment, Phone, PhoneDisabled, Home } from "@material-ui/icons";
 import { SocketContext } from "../SocketContext";
 import { UserContext } from "../UserContext";
+import logo from "../images/final-logo-nav.png";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -89,6 +90,9 @@ const Options = ({ children }) => {
                         justifyContent: "space-between",
                     }}
                 >
+                    <div>
+                        <img src={logo} alt="UnIon" width="110px" />
+                    </div>
                     <div className="notificationButton">{children}</div>
                     <div className="buttonsAppBar">
                         <a href="/" target="_blank">

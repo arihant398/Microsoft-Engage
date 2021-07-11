@@ -11,7 +11,8 @@ import RoomList from "./RoomList";
 const MainChat = () => {
     const { messages, sendMessage, setName, setRoomID, roomID, me } =
         useContext(ChatRoomContext);
-    const { userName, setUserName, userRoomListData } = useContext(UserContext);
+    const { userName, setUserName, userRoomListData, setUserRoomListData } =
+        useContext(UserContext);
     const [roomListData, setRoomListData] = useState({});
     const [newRoomID, setNewRoomID] = useState(
         window.location.pathname.slice(6)
@@ -20,8 +21,13 @@ const MainChat = () => {
     useEffect(() => {
         setUserName(() => localStorage.getItem("user-name"));
         setName(() => localStorage.getItem("user-name"));
-        setRoomListData(userRoomListData);
         setNewRoomID(window.location.pathname.slice(6));
+        setUserRoomListData(() =>
+            JSON.parse(localStorage.getItem("user-room-data"))
+        );
+        setRoomListData(() =>
+            JSON.parse(localStorage.getItem("user-room-data"))
+        );
     }, []);
 
     useEffect(() => {
@@ -75,7 +81,6 @@ const MainChat = () => {
                                     key={roomListData[obj]._id}
                                     style={{ margin: "8px" }}
                                 >
-                                    {console.log(roomListData[obj])}
                                     <RoomList
                                         roomListData={roomListData[obj]}
                                         setRoomID={setRoomID}
