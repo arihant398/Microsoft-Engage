@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import axios from "axios";
 
+// Component used to print the rooms specific to the logged in user
 const RoomList = ({ roomListData, setRoomID }) => {
     const classes = useStyles();
     const theme = useTheme();
@@ -18,18 +19,6 @@ const RoomList = ({ roomListData, setRoomID }) => {
         history.push(`/${roomListData.id}`);
     };
 
-    const viewMessages = async (e) => {
-        e.preventDefault();
-        try {
-            const roomData = { roomID: roomListData.id };
-            const roomResponse = await axios.post(
-                "http://localhost:5000/api/viewMessages",
-                roomData
-            );
-        } catch (err) {
-            console.log("Error while Viewing  Room");
-        }
-    };
     return (
         <>
             <Card className={classes.root}>

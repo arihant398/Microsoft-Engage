@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { Button, TextField, Tooltip } from "@material-ui/core";
 import { AddCircle, MeetingRoom, NoMeetingRoom } from "@material-ui/icons";
 
+// Component to Add New Room To the Database Specific to The User Logged In
+
 const AddRoom = ({ setIsWaitingRoom, setRoomName, addRoom }) => {
     const [waitingRoom, setWaitingRoom] = useState(false);
 
+    // Update Waiting Room Status
     const handleWaitingRoom = () => {
         setWaitingRoom(!waitingRoom);
         setIsWaitingRoom();

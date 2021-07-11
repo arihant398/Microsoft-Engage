@@ -14,17 +14,22 @@ import {
 import Alert from "@material-ui/lab/Alert";
 import logo from "../images/final-logo.png";
 
+// Component which handles log in
 const Login = (props) => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [error, setError] = useState();
     const [isError, setIsError] = useState(false);
 
+    // Using the UserContext which is used to set user data in client side
     const { setUserName, setUserEmail, setUserPassword, setToken } =
         useContext(UserContext);
     const history = useHistory();
-    const serverURL = "https://rvc-5.herokuapp.com/";
 
+    // On submitting form this function is called
+    // Tries to post log in data to the server
+    // Server verifies the data and returns the signal
+    // All necessary errors are displayed to the user if they fail to log in.
     const submit = async (e) => {
         e.preventDefault();
         try {
@@ -58,6 +63,7 @@ const Login = (props) => {
         }
     };
 
+    // Creates new Room
     function create() {
         const id = uuid();
         props.history.push(`/${id}`);

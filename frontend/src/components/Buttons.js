@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@material-ui/core";
 
+// Component to handle some similar buttons
 const Buttons = ({ text, method, size }) => {
     return (
         <span className="buttons">

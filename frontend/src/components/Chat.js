@@ -4,6 +4,7 @@ import { Send, MicNone, Home } from "@material-ui/icons";
 import { Row, Col } from "react-bootstrap";
 import { UserContext } from "../UserContext";
 
+//Component used to add CHAT in any screen
 const Chat = ({
     messages,
     roomID,
@@ -17,6 +18,7 @@ const Chat = ({
     isOnlyChat,
     userid,
 }) => {
+    //Different styling and roomID based on whether it is on video screen or regular room chat
     const mainChatClass = !isOnlyChat
         ? "grid-item item2 subGrid"
         : "grid-item item2-chat subGrid";
@@ -24,11 +26,12 @@ const Chat = ({
     const rID = !isOnlyChat
         ? window.location.pathname.slice(1)
         : window.location.pathname.slice(6);
+
     const colText = !isOnlyChat ? 8 : 9;
     const colButtons = !isOnlyChat ? 2 : 1;
-
     const [micColor, setMicColor] = useState("#3f50b5");
 
+    //Adding Room Data to chat screen to update name of room
     const { userRoomListData } = useContext(UserContext);
     let roomName = "";
     Object.keys(userRoomListData).map((obj, i) => {

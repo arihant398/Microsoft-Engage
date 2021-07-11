@@ -8,16 +8,22 @@ import { UserContext } from "../UserContext";
 import { Row, Col } from "react-bootstrap";
 import RoomList from "./RoomList";
 
+// Component which acts as the main chat screen
 const MainChat = () => {
+    // Using ChatRoomContext to communicate with the server
     const { messages, sendMessage, setName, setRoomID, roomID, me } =
         useContext(ChatRoomContext);
+
+    // Using UserContext to use data from user
     const { userName, setUserName, userRoomListData, setUserRoomListData } =
         useContext(UserContext);
+
     const [roomListData, setRoomListData] = useState({});
     const [newRoomID, setNewRoomID] = useState(
         window.location.pathname.slice(6)
     );
 
+    // Setting client side user data
     useEffect(() => {
         setUserName(() => localStorage.getItem("user-name"));
         setName(() => localStorage.getItem("user-name"));
@@ -30,12 +36,14 @@ const MainChat = () => {
         );
     }, []);
 
+    // Updating the messages
     useEffect(() => {
         setMessageList(messages);
     }, [messages]);
 
     const [newMessage, setNewMessage] = useState("");
     const [messageList, setMessageList] = useState({});
+
     //Audio To Message
     const {
         transcript,
@@ -60,6 +68,7 @@ const MainChat = () => {
         });
     };
 
+    // Sending Messages to server
     function messageSend(message) {
         sendMessage(message, roomID);
     }

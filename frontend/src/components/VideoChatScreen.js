@@ -4,6 +4,7 @@ import Options from "./Options";
 import Notifications from "./Notifications";
 import { ContextProvider } from "../SocketContext";
 
+// Component which provieds the main video screen with the required context
 const VideoChatScreen = ({ isOnlyChat }) => {
     return (
         <>

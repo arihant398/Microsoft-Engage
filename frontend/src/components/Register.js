@@ -5,7 +5,9 @@ import { Button, TextField, Card } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import logo from "../images/final-logo.png";
 
+// Component which handles registration of new users
 const Register = () => {
+    // Variables to store user entered data from the forms
     const [name, setName] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
@@ -13,10 +15,12 @@ const Register = () => {
     const [error, setError] = useState();
     const [isError, setIsError] = useState(false);
 
-    const serverURL = "http://localhost:5000/api/signup";
-
     const history = useHistory();
 
+    // On form submit, the form data is posted to server
+    // Server verifies the data
+    // If there are errors while verifying, the user is notified
+    // Else the user is registered and taken to login screen
     const submit = async (e) => {
         e.preventDefault();
         try {
@@ -25,12 +29,9 @@ const Register = () => {
                 "http://localhost:5000/api/signup",
                 signup
             );
-            console.log(signupResponse.data);
             history.push("/");
         } catch (err) {
-            //err.response.data.msg && setError(err.response.data.msg);
             setError(err.response.data.errors);
-            console.log(err.response.data.errors);
             setIsError(true);
         }
     };

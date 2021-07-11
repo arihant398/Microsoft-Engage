@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory, Link } from "react-router-dom";
 import { v1 as uuid } from "uuid";
 
+// Material-UI styling to give margin to required items
 const useStyles = makeStyles((theme) => ({
     root: {
         "& > *": {
@@ -12,19 +13,26 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+// Component which acts as the main home screen.
+// Checks wheter user is logged in or not.
+// Redirects accordingly.
 const HomeScreen = (props) => {
     const classes = useStyles();
+
+    // Creates a new room
     function create() {
         const id = uuid();
         props.history.push(`/${id}`);
     }
 
     const hist = useHistory();
+
+    // Redirect function to register and login pages
     const register = () => hist.push("/register");
     const login = () => hist.push("/login");
 
+    // Checking log in status
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
     useEffect(() => {
         const loggedInUser = localStorage.getItem("user-name");
         if (loggedInUser) {
@@ -33,6 +41,7 @@ const HomeScreen = (props) => {
             login();
         }
     }, []);
+
     return (
         <div>
             {!isLoggedIn ? (

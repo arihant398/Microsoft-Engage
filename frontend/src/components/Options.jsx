@@ -7,6 +7,7 @@ import { SocketContext } from "../SocketContext";
 import { UserContext } from "../UserContext";
 import logo from "../images/final-logo-nav.png";
 
+// Material-UI styles
 const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex",
@@ -38,7 +39,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+// Component to act as nav bar in video screen
 const Options = ({ children }) => {
+    // Using SocketContext to communicate with the server
     const {
         me,
         callAccepted,
@@ -53,8 +56,11 @@ const Options = ({ children }) => {
         answerCall,
         usersInMeeting,
         isInMeetingRoom,
+        isRoomFull,
+        setIsRoomFull,
     } = useContext(SocketContext);
 
+    // Setting user data in client side
     const { userName, setUserName } = useContext(UserContext);
     const [idToCall, setIdToCall] = useState("");
     const classes = useStyles();
@@ -63,6 +69,7 @@ const Options = ({ children }) => {
 
     const [isClickedOnce, setIsClickedOnce] = useState(false);
 
+    // Using Room ID to call people who are in meeting in a room
     const RID = window.location.pathname.slice(1);
     const callAllUsers = () => {
         setIsClickedOnce(true);

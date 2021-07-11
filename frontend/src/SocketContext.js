@@ -9,7 +9,6 @@ import io from "socket.io-client";
 import Peer from "simple-peer";
 
 const SocketContext = createContext();
-//https://arihant-vc-test.herokuapp.com/
 
 const ContextProvider = ({ children }) => {
     const [stream, setStream] = useState(null);
@@ -54,7 +53,7 @@ const ContextProvider = ({ children }) => {
     useEffect(() => {
         socket.current = io("http://localhost:5000/", {
             "sync disconnect on unload": true,
-        }); //  https://rvc-5.herokuapp.com/
+        });
         navigator.mediaDevices
             .getUserMedia({ video: true, audio: true })
             .then((currentStream) => {
@@ -83,7 +82,6 @@ const ContextProvider = ({ children }) => {
         });
 
         socket.current.on("calluser", ({ from, name: callerName, signal }) => {
-            console.log(isAdmin);
             setCall({
                 isReceivedCall: true,
                 from,
@@ -139,9 +137,7 @@ const ContextProvider = ({ children }) => {
         socket.current.emit("messageSent", { text, name, id: me });
     }
 
-    function updateMessages() {
-        console.log("Messages Update", messages);
-    }
+    function updateMessages() {}
 
     function muteMic() {
         stream.getAudioTracks().forEach((track) => {
@@ -182,10 +178,6 @@ const ContextProvider = ({ children }) => {
                 name: name,
             });
         });
-        // peer.on("stream", (currentStream) => {
-        //     userVideo.current.srcObject = currentStream;
-        // });
-
         peer.signal(call.signal);
 
         connectionRef.current = peer;
@@ -195,7 +187,6 @@ const ContextProvider = ({ children }) => {
             peer,
         });
         setPeers((temp) => [...temp, { id: call.from, peer: peer }]);
-        console.log("Peers: ", peers);
     };
 
     const callUser = (id) => {
@@ -209,10 +200,6 @@ const ContextProvider = ({ children }) => {
                 name,
             });
         });
-
-        // peer.on("stream", (currentStream) => {
-        //     userVideo.current.srcObject = currentStream;
-        // });
 
         connectionRef.current = peer;
         peersRef.current.push({
@@ -230,7 +217,6 @@ const ContextProvider = ({ children }) => {
             connectionRef.current = peer.peer;
             connectionRef.current.destroy();
         });
-        //connectionRef.current.destroy();
         setIsInMeeting(false);
         window.location.replace("/");
     };

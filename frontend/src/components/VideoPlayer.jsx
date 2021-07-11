@@ -1,12 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-    Grid,
-    Typography,
-    Paper,
-    Button,
-    TextField,
-    Tooltip,
-} from "@material-ui/core";
+import { Button, Tooltip } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { SocketContext } from "../SocketContext";
 import { UserContext } from "../UserContext";
@@ -14,9 +7,7 @@ import axios from "axios";
 import SpeechRecognition, {
     useSpeechRecognition,
 } from "react-speech-recognition";
-import { createSpeechlySpeechRecognition } from "@speechly/speech-recognition-polyfill";
 import { Row, Col } from "react-bootstrap";
-import Buttons from "./Buttons";
 import Chat from "./Chat";
 
 import {
@@ -34,9 +25,8 @@ import {
     MicNone,
 } from "@material-ui/icons";
 import Video from "./Video";
-import SpeechRecog from "./SpeechRecog";
-import RoomList from "./RoomList";
 
+// Material-UI styles
 const useStyles = makeStyles((theme) => ({
     video: {
         width: "550px",
@@ -59,7 +49,10 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
     },
 }));
+
+// Component which acts as the main video chat screen
 const VideoPlayer = ({ isOnlyChat }) => {
+    // SocketContext is used to communicate with the server
     const {
         name,
         callAccepted,
@@ -96,16 +89,19 @@ const VideoPlayer = ({ isOnlyChat }) => {
     } = useContext(SocketContext);
     const classes = useStyles();
 
+    // UserContext is used to use client side data
     const { userEmail, userRoomListData, setUserEmail, setUserName, userName } =
         useContext(UserContext);
     const [isRoomAdded, setIsRoomAdded] = useState(false);
     const [newRoomName, setNewRoomName] = useState("");
     const [isNewWaitingRoom, setIsNewWaitingRoom] = useState(false);
 
+    // Update waiting room status
     const updateIsWaitingRoom = () => {
         setIsWaitingRoom(!isWaitingRoom);
     };
 
+    // Handle screen share
     const handleScreenShare = () => {
         if (!isScreenShare) {
             shareScreen();
@@ -113,12 +109,15 @@ const VideoPlayer = ({ isOnlyChat }) => {
             stopShareScreen();
         }
     };
+
+    // Setting client side user data
     const rID = window.location.pathname.slice(1);
     setUserEmail(() => localStorage.getItem("user-email"));
     setUserName(() => localStorage.getItem("user-name"));
+
+    // Updating waiting room status for the server
     useEffect(() => {
         Object.keys(userRoomListData).map((obj, i) => {
-            //const found = userRoomListData[obj].some((el) => el.id === rID);
             if (userRoomListData[obj].id === rID) {
                 setIsRoomAdded(true);
                 setIsWaitingRoom(userRoomListData[obj].isWaitingRoom);
@@ -127,6 +126,7 @@ const VideoPlayer = ({ isOnlyChat }) => {
         });
     }, []);
 
+    // Updating Messages
     useEffect(() => {
         updateMessages();
         setMessageList(messages);
@@ -135,6 +135,9 @@ const VideoPlayer = ({ isOnlyChat }) => {
     const [newMessage, setNewMessage] = useState("");
     const [messageList, setMessageList] = useState({});
 
+    // Function to add new room to the users room database
+    // Sends a post request to the server with the required data
+    // Alerts the user of the status once the request is done
     const addNewRoom = async (e) => {
         e.preventDefault();
         try {
@@ -149,19 +152,12 @@ const VideoPlayer = ({ isOnlyChat }) => {
                 roomData
             );
             setIsRoomAdded(true);
-            console.log(roomResponse.data);
-        } catch (err) {
-            console.log("Error while adding new Room");
-        }
+        } catch (err) {}
     };
 
     //Raise Hand
     const [isHandRaised, setIsHandRaised] = useState(false);
-
-    //UserVideos
-
     const handRaised = () => {
-        console.log("is Hand Raised", isHandRaised);
         if (!isHandRaised) {
             raiseHand();
         } else {
@@ -172,7 +168,6 @@ const VideoPlayer = ({ isOnlyChat }) => {
     };
 
     //Audio To Message
-
     const {
         transcript,
         listening,
@@ -236,7 +231,7 @@ const VideoPlayer = ({ isOnlyChat }) => {
                             <div className="testVideoContainer">
                                 <div className="userVideoContainer">
                                     {peers.map((peer, index) => {
-                                        if (peer.peer) {
+                                        if (peer.peer.readable) {
                                             return (
                                                 <Video
                                                     key={index}

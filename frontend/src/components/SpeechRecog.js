@@ -11,6 +11,7 @@ const appId = "6d8fa7d4-5b64-41b7-8f97-bae537f883e5";
 const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(appId);
 //SpeechRecognition.applyPolyfill(SpeechlySpeechRecognition);
 
+// Component used to handle speech recognition
 const SpeechRecog = ({ setNewMessage }) => {
     const { sendMessage, updateMessages, messages } = useContext(SocketContext);
     //const [newMessage, setNewMessage] = useState("");

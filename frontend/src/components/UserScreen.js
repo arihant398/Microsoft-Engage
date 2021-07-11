@@ -19,12 +19,14 @@ import RoomList from "./RoomList";
 import Buttons from "./Buttons";
 import logo from "../images/final-logo-nav.png";
 
+// Component which acts as the main screen which the user sees once they log in
 const UserScreen = (props) => {
     const [name, setName] = useState();
     const [user, setUser] = useState({});
     const [alertStatus, setAlertStatus] = useState(0);
     const [newRoomID, setNewRoomID] = useState();
 
+    // Using client side user data from UserContext
     const {
         userName,
         setUserName,
@@ -35,24 +37,26 @@ const UserScreen = (props) => {
     } = useContext(UserContext);
     const history = useHistory();
 
+    // Creating a new room
     function create() {
         const id = uuid();
         props.history.push(`/${id}`);
     }
 
-    //Parameters for adding new room
+    // Parameters for adding new room
     const [roomName, setRoomName] = useState("Room");
     const [isWaitingRoom, setIsWaitingRoom] = useState(false);
     const [isAddRoom, setIsAddRoom] = useState(false);
 
+    // Updating whether to add room or not
     function updateIsAddRoom() {
         setIsAddRoom(!isAddRoom);
         setIsViewRoom(false);
     }
 
+    // Updating waiting room status
     function updateIsWaitingRoom() {
         setIsWaitingRoom(!isWaitingRoom);
-        console.log(isWaitingRoom);
     }
 
     //Parameters for viewing rooms
@@ -67,6 +71,7 @@ const UserScreen = (props) => {
 
     const iconColor = "#acb6fc";
 
+    // Updating client side user data if they are already logged in
     useEffect(() => {
         const loggedInUser = localStorage.getItem("user-name");
         if (loggedInUser) {
@@ -78,16 +83,19 @@ const UserScreen = (props) => {
         }
     }, []);
 
+    // Function which logs the user out
     const handleLogout = () => {
         setUserName();
         localStorage.clear();
         history.push("/");
     };
 
+    // Function to add new room to the users room database
+    // Sends a post request to the server with the required data
+    // Alerts the user of the status once the request is done
     const addNewRoom = async (e) => {
         e.preventDefault();
         const newId = uuid();
-        console.log(isWaitingRoom);
         try {
             const roomData = {
                 email: userEmail,
@@ -95,19 +103,18 @@ const UserScreen = (props) => {
                 isWaitingRoom: isWaitingRoom,
                 roomName: roomName,
             };
-            console.log(roomData);
             const roomResponse = await axios.post(
                 "http://localhost:5000/api/addRoom",
                 roomData
             );
             setAlertStatus(1);
-            console.log(roomResponse.data);
         } catch (err) {
             setAlertStatus(-1);
-            console.log("Error while adding new Room");
         }
     };
 
+    // Function to view rooms from the users room database
+    // Sends a post request to the server with the required data
     const viewRooms = async (e) => {
         e.preventDefault();
         try {
@@ -116,8 +123,6 @@ const UserScreen = (props) => {
                 "http://localhost:5000/api/viewRoom",
                 roomData
             );
-            console.log(userEmail);
-            console.log(roomResponse.data);
             setRoomListData(roomResponse.data.result);
             setIsViewRoom(!isViewRoom);
             setUserRoomListData(roomResponse.data.result);
@@ -126,9 +131,7 @@ const UserScreen = (props) => {
                 JSON.stringify(roomResponse.data.result)
             );
             setIsAddRoom(false);
-        } catch (err) {
-            console.log("Error while Viewing  Room");
-        }
+        } catch (err) {}
     };
 
     return (

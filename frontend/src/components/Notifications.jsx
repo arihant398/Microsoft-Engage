@@ -2,6 +2,7 @@ import React, { useContext, useRef, useEffect } from "react";
 import { Button } from "@material-ui/core";
 import { SocketContext } from "../SocketContext";
 
+// Component for notifying host if a person is in waiting room
 const Notifications = () => {
     const {
         answerCall,
@@ -17,13 +18,6 @@ const Notifications = () => {
         if (initialRender.current) {
             initialRender.current = false;
         } else {
-            console.log(
-                call.isReceivedCall,
-                " ",
-                callAccepted,
-                " ",
-                isWaitingRoom
-            );
             if (call.isReceivedCall && !isWaitingRoom) {
                 answerCall();
             }
