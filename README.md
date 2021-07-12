@@ -69,7 +69,7 @@ The features that I have implemented are:
 3. **Mute/Reduce Volume Of Individual Participants-** Users have the option to mute individual participants and also reduce volume of indivudual participants on their side.
 
 ## Problems Faced
- 1. **Adding Multiple Participants-** Creating a video call app which was waorking for more than 2 participants was a problem as I had:
+ 1. **Adding Multiple Participants-** Creating a video call app which was working for more than 2 participants was a problem as I had:
 	 * To create a peer connection from a participant to every other participant
 	 * Whenerver a new participant left or joined the meeting, remove or add their video to screens of all other participants.
 	 * Only form a peer with participants who are part of the meeting and not everyone who is in the waiting room.
