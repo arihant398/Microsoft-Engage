@@ -1,6 +1,5 @@
 # UnIon - Arihant Singh, IIIT Delhi!
 
-
 ## Introduction
 
 The aim of this project was to build a fully functional video call app where at least two people are able to communicate with each other.
@@ -101,18 +100,18 @@ Developers who want to contribute to the project or see by themselevs how the pr
 
  1. Clone the project and "cd" to the root directory in your terminal.
  2.  Enter the following command ``` $ npm install``` 
- 3. Create a .env file add following:
+ 3. Create a .env file and add following:
 	~~~
 	PORT=5000
 	DATABASE=<YOUR MONGODB URL >
 	TOKEN_SECRET=<YOUR SECRET KEY>
 	~~~
- 4. Enter following commands in terminal
+ 4. Enter the following commands in terminal
 	 ~~~
 	 $ cd frontend
 	 $ npm install
 	~~~
- 5. Enter following command in the root directory:
+ 5. Enter the following command in the root directory:
 	 ``` $ node index.js```
  6. Enter following comman in the frontend directory:
 	 ```$ npm start```
@@ -136,6 +135,3 @@ To deploy the frontend follow the steps below:
  4. Open and setup your netlify account.
  5. Create a new site on netlify and drag and drop the **build** folder on netlify.
  6. Wait for the site to be published. (This will take less than a minute)
-## Dependencies Used
-### Backend
- 1. List item
