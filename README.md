@@ -95,6 +95,9 @@ The features that I have implemented are:
  2. **Fixing The Known Issues-** Fixing the issues mentioned above is a priority.
  3. **Improvements On Chat Room-** Improving the design and usability of the chat room for users who have not added the room to their **personal rooms**.
 
+## Devices
+ This web app is developed for computers and is not responive, so use in mobile devices is dificult.  
+
 ## Installation
 Developers who want to contribute to the project or see by themselevs how the project is working, can follow the below mentioned steps to install and setup the project in their environment.
 
